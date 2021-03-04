@@ -3,6 +3,8 @@ import Web3 from 'web3'
 import './App.css';
 import Color from '../abis/Color.json'
 
+import { Card, Container, Button } from 'react-bootstrap';
+
 class App extends Component {
 
   async componentWillMount() {
@@ -41,10 +43,19 @@ class App extends Component {
       // Load Colors
       for (var i = 1; i <= totalSupply; i++) {
         const color = await contract.methods.colors(i - 1).call()
+        const owner = await contract.methods.ownerOf(i).call()
+        console.log('Color:')
+        console.log(color)
+        console.log('Owner:')
+        console.log(owner.toString())
         this.setState({
           colors: [...this.state.colors, color]
         })
+        this.setState({
+          owners: [...this.state.owners, owner]
+        })
       }
+      console.log(this.state.owners[3])
     } else {
       window.alert('Smart contract not deployed to detected network.')
     }
@@ -65,7 +76,8 @@ class App extends Component {
       account: '',
       contract: null,
       totalSupply: 0,
-      colors: []
+      colors: [],
+      owners:[]
     }
   }
 
@@ -113,20 +125,34 @@ class App extends Component {
             </main>
           </div>
           <hr/>
-          <div className="row text-center">
+          <Container >
             { this.state.colors.map((color, key) => {
+              if (this.state.owners[key]===this.state.account){
               return(
-                <div key={key} className="col-md-3 mb-3">
-                  <div className="token" style={{ backgroundColor: color }}></div>
-                  <div>{color}</div>
-                </div>
-              )
+                <p>  
+                <Card>
+                  <p> </p>
+                  <Card style={{ height: '15rem', backgroundColor: color.toString() }} ><Card.Body>  </Card.Body></Card>
+                  <Card.Body>
+                    <Card.Title>Pantone {color}</Card.Title>
+
+                    <Card.Text>
+                      Owner: <small class="text-muted">{this.state.owners[key]} </small>
+                    </Card.Text>
+                    <Button variant="primary">Go somewhere</Button>
+                  </Card.Body>
+                </Card>
+              </p>
+              )}
             })}
-          </div>
+          </Container>
         </div>
       </div>
     );
   }
 }
+
+export default App;
+
 
 export default App;

@@ -70,4 +70,18 @@ contract('Color', (accounts) => {
     })
   })
 
+    describe('Try to Transfer token', async () => {
+    it('transfer', async () => {
+      let ownerbefore, ownerafter
+
+      ownerbefore = await contract.ownerOf('1')
+      const result = await contract.safeTransferFrom(accounts[0], accounts[1],'1')
+      ownerafter = await contract.ownerOf('1')
+      console.log('ownerbefore:')
+      console.log(ownerbefore)
+      console.log('ownerafter:')
+      console.log(ownerafter)
+    })
+  })
+
 })
